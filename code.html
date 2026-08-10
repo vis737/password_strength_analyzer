@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Password Strength Analyzer | Sentinel Security</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#564427",
+                        "secondary-container": "#3f465c",
+                        "inverse-primary": "#545f73",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container": "#122131",
+                        "on-tertiary-container": "#a38c6a",
+                        "on-primary-container": "#8590a6",
+                        "secondary": "#bec6e0",
+                        "inverse-on-surface": "#233143",
+                        "surface-container-low": "#0d1c2d",
+                        "outline-variant": "#45474c",
+                        "primary-container": "#1e293b",
+                        "surface-bright": "#2c3a4c",
+                        "tertiary-container": "#35260c",
+                        "surface-variant": "#273647",
+                        "on-primary-fixed": "#111c2d",
+                        "surface-container-highest": "#273647",
+                        "tertiary-fixed": "#fadfb8",
+                        "tertiary-fixed-dim": "#ddc39d",
+                        "on-error": "#690005",
+                        "outline": "#8f9097",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-primary": "#263143",
+                        "tertiary": "#ddc39d",
+                        "on-surface-variant": "#c5c6cd",
+                        "on-tertiary": "#3e2e13",
+                        "primary-fixed-dim": "#bcc7de",
+                        "surface": "#051424",
+                        "error": "#ffb4ab",
+                        "primary": "#bcc7de",
+                        "error-container": "#93000a",
+                        "surface-dim": "#051424",
+                        "inverse-surface": "#d4e4fa",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-secondary-container": "#adb4ce",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-high": "#1c2b3c",
+                        "on-surface": "#d4e4fa",
+                        "on-primary-fixed-variant": "#3c475a",
+                        "surface-container-lowest": "#010f1f",
+                        "on-background": "#d4e4fa",
+                        "on-tertiary-fixed": "#271902",
+                        "on-secondary": "#283044",
+                        "background": "#051424",
+                        "primary-fixed": "#d8e3fb",
+                        "surface-tint": "#bcc7de",
+                        "success": "#34d399",
+                        "warning": "#fbbf24",
+                        "danger": "#f87171",
+                        "neon-cyan": "#00f2ff",
+                        "neon-blue": "#0066ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "container-max-width": "1280px",
+                        "margin-desktop": "48px",
+                        "unit": "4px",
+                        "stack-lg": "32px",
+                        "stack-sm": "8px",
+                        "gutter": "24px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "code-md": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "code-md": ["16px", { "lineHeight": "1.5", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .progress-segment {
+            transition: all 0.3s ease;
+        }
+        .glass-panel {
+            background: rgba(5, 20, 36, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 242, 255, 0.05);
+        }
+        .neon-border {
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2), inset 0 0 5px rgba(0, 242, 255, 0.2);
+        }
+        .neon-text {
+            color: #00f2ff;
+            text-shadow: 0 0 8px rgba(0, 242, 255, 0.6);
+        }
+        webgl-shader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+<script type="module">
+        class WebGLShaderElement extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+                this.canvas = document.createElement('canvas');
+                this.canvas.style.width = '100%';
+                this.canvas.style.height = '100%';
+                this.canvas.style.display = 'block';
+                this.shadowRoot.appendChild(this.canvas);
+                this.gl = this.canvas.getContext('webgl');
+                this.program = null;
+                this.animationFrameId = null;
+            }
+
+            connectedCallback() {
+                this.initWebGL();
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                this.render();
+            }
+
+            disconnectedCallback() {
+                cancelAnimationFrame(this.animationFrameId);
+                window.removeEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                const displayWidth = this.canvas.clientWidth;
+                const displayHeight = this.canvas.clientHeight;
+                if (this.canvas.width !== displayWidth || this.canvas.height !== displayHeight) {
+                    this.canvas.width = displayWidth;
+                    this.canvas.height = displayHeight;
+                    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+                }
+            }
+
+            initWebGL() {
+                const gl = this.gl;
+                const vertexShaderSource = `
+                    attribute vec2 position;
+                    varying vec2 v_texCoord;
+                    void main() {
+                        gl_Position = vec4(position, 0.0, 1.0);
+                        v_texCoord = position * 0.5 + 0.5;
+                    }
+                `;
+                
+                // Get shader source from text content, decode HTML entities if necessary
+                const fragmentShaderSource = this.textContent.trim();
+
+                const vertexShader = this.createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+                const fragmentShader = this.createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+                if (!vertexShader || !fragmentShader) return;
+
+                this.program = this.createProgram(gl, vertexShader, fragmentShader);
+                if (!this.program) return;
+
+                const positionBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                const positions = [
+                    -1.0, -1.0,
+                     1.0, -1.0,
+                    -1.0,  1.0,
+                    -1.0,  1.0,
+                     1.0, -1.0,
+                     1.0,  1.0,
+                ];
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+                const positionAttributeLocation = gl.getAttribLocation(this.program, "position");
+                gl.enableVertexAttribArray(positionAttributeLocation);
+                gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+                this.timeLocation = gl.getUniformLocation(this.program, "u_time");
+                this.resolutionLocation = gl.getUniformLocation(this.program, "u_resolution");
+                this.startTime = performance.now();
+            }
+
+            createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            createProgram(gl, vertexShader, fragmentShader) {
+                const program = gl.createProgram();
+                gl.attachShader(program, vertexShader);
+                gl.attachShader(program, fragmentShader);
+                gl.linkProgram(program);
+                if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                    console.error('Unable to initialize the shader program: ' + gl.getProgramInfoLog(program));
+                    return null;
+                }
+                return program;
+            }
+
+            render() {
+                if (!this.program) return;
+                const gl = this.gl;
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                gl.useProgram(this.program);
+
+                const currentTime = (performance.now() - this.startTime) / 1000.0;
+                gl.uniform1f(this.timeLocation, currentTime);
+                gl.uniform2f(this.resolutionLocation, this.canvas.width, this.canvas.height);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                this.animationFrameId = requestAnimationFrame(() => this.render());
+            }
+        }
+        customElements.define('webgl-shader', WebGLShaderElement);
+    </script>
+</head>
+<body class="text-on-background min-h-screen flex flex-col font-body-md bg-black">
+
+<!-- TopNavBar -->
+<nav class="w-full top-0 sticky glass-panel z-50 border-b-0 border-b border-neon-cyan/20">
+<div class="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto">
+<div class="font-headline-md text-headline-md font-bold neon-text tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-neon-cyan">terminal</span>
+    SentinelAuth_Sys
+</div>
+<div class="flex items-center gap-gutter">
+<div class="flex items-center gap-stack-sm text-neon-cyan/80 hidden md:flex">
+<button class="p-2 rounded-full hover:bg-neon-cyan/10 transition-colors"><span class="material-symbols-outlined" data-icon="shield">shield</span></button>
+<button class="p-2 rounded-full hover:bg-neon-cyan/10 transition-colors"><span class="material-symbols-outlined" data-icon="help_outline">help_outline</span></button>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-neon-cyan">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a security administrator in a minimalist modern dark environment. The lighting is cool and blue-tinted. The person looks focused." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqO39nOekGsdaN_a-2TGSNTmSwQxat4I7zYmBsAOmezHIsEOPydpeUAQLyNQDptzj7LjjRmP_ulyDrBfa2Y6YAOJNInhdnwu9DIQREG2g_oooj4VM0-zE671F3fMTKhkyxLhZuFyN3AwbCxhXTRR-mrH0slmb-XZQcx7XvdvYix7NaATv7O12ws8ILVZucVtN1xfWrE6oHO3CISM9cxI8lRbgHFzxGrYi0WK1X6FwDjfb8eZKeTOpYmg"/>
+</div>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 max-w-container-max-width mx-auto w-full relative z-10">
+<!-- SideNavBar -->
+<aside class="hidden md:flex h-screen w-64 left-0 sticky glass-panel flex flex-col gap-stack-md py-stack-lg flex-shrink-0 z-40 border-r-0 border-r border-neon-cyan/20">
+<div class="px-gutter mb-stack-md">
+<div class="flex items-center gap-stack-sm mb-2">
+<div class="w-12 h-12 rounded-full bg-neon-cyan/10 border border-neon-cyan/50 flex items-center justify-center text-neon-cyan shadow-[0_0_15px_rgba(0,242,255,0.3)]">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-black text-white">Admin Console</h2>
+<p class="font-label-caps text-label-caps text-neon-cyan/80 font-code-md">LVL_4_SECURE</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col flex-1 px-stack-sm font-code-md">
+<a class="flex items-center gap-stack-sm px-gutter py-3 rounded-r-full text-white/70 hover:bg-neon-cyan/10 hover:text-neon-cyan transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm">SYS_DASHBOARD</span>
+</a>
+<a class="flex items-center gap-stack-sm px-gutter py-3 rounded-r-full neon-text border-r-4 border-neon-cyan bg-neon-cyan/10 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="security" data-weight="fill" style="font-variation-settings: 'FILL' 1;">security</span>
+<span class="text-sm font-bold">SEC_AUDIT_LOG</span>
+</a>
+<a class="flex items-center gap-stack-sm px-gutter py-3 rounded-r-full text-white/70 hover:bg-neon-cyan/10 hover:text-neon-cyan transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="vpn_key">vpn_key</span>
+<span class="text-sm">KEY_VAULT_ACC</span>
+</a>
+<a class="flex items-center gap-stack-sm px-gutter py-3 rounded-r-full text-white/70 hover:bg-neon-cyan/10 hover:text-neon-cyan transition-all duration-150 ease-in-out mt-auto" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm">CONFIG_PARAMS</span>
+</a>
+</nav>
+<div class="px-gutter mt-stack-md">
+<button class="w-full bg-black/50 hover:bg-neon-cyan/20 text-neon-cyan py-2 rounded neon-border transition-all flex justify-center items-center gap-2 font-code-md text-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">add</span> INIT_ANALYSIS
+                </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile py-stack-lg md:px-margin-desktop min-h-[calc(100vh-64px)] overflow-y-auto">
+<header class="mb-stack-lg flex flex-col md:flex-row gap-8 items-center md:items-start">
+<div class="flex-1">
+<h1 class="font-display-lg text-display-lg text-white mb-stack-sm drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">Cryptographic Strength Analyzer</h1>
+<p class="font-code-md text-body-lg text-neon-cyan/80 max-w-2xl">Real-time cryptographic evaluation of credential complexity. Ensure compliance with Level 4 security protocols. Monitoring stream active...</p>
+</div>
+<div class="hidden md:block w-48 h-48 rounded-2xl overflow-hidden glass-panel flex-shrink-0 neon-border p-2">
+<img alt="Cybersecurity Key" class="w-full h-full object-cover rounded-xl opacity-90 mix-blend-screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6x2oMylkTJq548Fos_dx0PGxn8OdJPuGQBd7Q5k7bsUPgPW9LcALXoQce2ethvsxrvOmaHRyVYNOqzF-jFlzZUtbvvu-HhBF5x7L8hIPVHMWTgh59jXJ6zsSbKWQE7yA1Dzy6CDh_1bWVXgzLU-tDHq_CPqBE_B_fgSSZhoLOF8EkhfkDn7Jd9LbS_rK8D_BE_NkTO8xsyo2gee3Sr0GW3IyeL-1xKTMUtDR1gZzGjgM10EwpZFGoJg"/>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Input and Primary Stats -->
+<div class="lg:col-span-7 flex flex-col gap-stack-md">
+<!-- Main Input Card -->
+<div class="glass-panel rounded-xl p-gutter relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-50"></div>
+<label class="font-code-md text-label-caps text-neon-cyan/70 mb-stack-sm block uppercase tracking-widest" for="password-input">&gt; INPUT_CREDENTIAL_STRING</label>
+<div class="relative flex items-center">
+<span class="absolute left-4 text-neon-cyan material-symbols-outlined">lock</span>
+<input class="w-full bg-black/60 border border-neon-cyan/30 rounded-lg py-4 pl-12 pr-12 font-code-md text-code-md text-white placeholder-white/30 focus:outline-none focus:border-neon-cyan focus:ring-1 focus:ring-neon-cyan transition-all shadow-[inset_0_0_15px_rgba(0,0,0,0.8)]" id="password-input" placeholder="Awaiting input..." type="password"/>
+<button class="absolute right-4 text-neon-cyan/70 hover:text-neon-cyan transition-colors focus:outline-none p-1 rounded" id="toggle-visibility">
+<span class="material-symbols-outlined" id="visibility-icon">visibility</span>
+</button>
+</div>
+<!-- Visual Gauge -->
+<div class="mt-stack-lg">
+<div class="flex justify-between items-end mb-stack-sm font-code-md">
+<span class="text-sm text-neon-cyan/70 uppercase tracking-widest">COMPLEXITY_INDEX</span>
+<span class="text-lg font-bold text-white/50" id="strength-label">NULL</span>
+</div>
+<div class="flex gap-2 h-4 w-full rounded overflow-hidden bg-black/50 border border-neon-cyan/20 p-1">
+<div class="flex-1 progress-segment bg-white/10 rounded-sm" id="seg-1"></div>
+<div class="flex-1 progress-segment bg-white/10 rounded-sm" id="seg-2"></div>
+<div class="flex-1 progress-segment bg-white/10 rounded-sm" id="seg-3"></div>
+<div class="flex-1 progress-segment bg-white/10 rounded-sm" id="seg-4"></div>
+<div class="flex-1 progress-segment bg-white/10 rounded-sm" id="seg-5"></div>
+</div>
+</div>
+</div>
+<!-- Actionable Feedback Alert -->
+<div class="glass-panel rounded-xl p-stack-md border-l-4 border-neon-cyan/50 hidden" id="feedback-alert">
+<div class="flex items-start gap-stack-sm">
+<span class="material-symbols-outlined text-neon-cyan mt-1 animate-pulse" id="feedback-icon">info</span>
+<div>
+<h4 class="font-code-md text-body-lg font-semibold text-white mb-1 uppercase tracking-wider">SYS_WARNING</h4>
+<ul class="font-code-md text-sm text-neon-cyan/90 list-none space-y-1" id="feedback-list">
+<!-- Dynamic items go here -->
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Checklist -->
+<div class="lg:col-span-5">
+<div class="glass-panel rounded-xl p-gutter h-full relative">
+<div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-neon-cyan/30 rounded-tr-xl"></div>
+<div class="absolute bottom-0 left-0 w-16 h-16 border-b-2 border-l-2 border-neon-cyan/30 rounded-bl-xl"></div>
+<h3 class="font-code-md text-headline-sm text-white mb-stack-md flex items-center gap-2 uppercase tracking-wider">
+<span class="material-symbols-outlined text-neon-cyan">fact_check</span> Validation_Matrix
+                        </h3>
+<ul class="flex flex-col gap-3 font-code-md">
+<li class="flex items-center gap-3 p-3 rounded bg-black/40 border border-neon-cyan/10 transition-all duration-300" id="req-length">
+<span class="material-symbols-outlined text-white/30 icon-check">radio_button_unchecked</span>
+<span class="text-sm text-white/50">LEN &gt;= 0x08</span>
+</li>
+<li class="flex items-center gap-3 p-3 rounded bg-black/40 border border-neon-cyan/10 transition-all duration-300" id="req-uppercase">
+<span class="material-symbols-outlined text-white/30 icon-check">radio_button_unchecked</span>
+<span class="text-sm text-white/50">CHAR_UPPER [A-Z]</span>
+</li>
+<li class="flex items-center gap-3 p-3 rounded bg-black/40 border border-neon-cyan/10 transition-all duration-300" id="req-lowercase">
+<span class="material-symbols-outlined text-white/30 icon-check">radio_button_unchecked</span>
+<span class="text-sm text-white/50">CHAR_LOWER [a-z]</span>
+</li>
+<li class="flex items-center gap-3 p-3 rounded bg-black/40 border border-neon-cyan/10 transition-all duration-300" id="req-number">
+<span class="material-symbols-outlined text-white/30 icon-check">radio_button_unchecked</span>
+<span class="text-sm text-white/50">INT_DIGIT [0-9]</span>
+</li>
+<li class="flex items-center gap-3 p-3 rounded bg-black/40 border border-neon-cyan/10 transition-all duration-300" id="req-special">
+<span class="material-symbols-outlined text-white/30 icon-check">radio_button_unchecked</span>
+<span class="text-sm text-white/50">SYM_CHAR (!@#$%)</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full py-8 mt-stack-lg glass-panel border-t-0 border-t border-neon-cyan/20 relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop max-w-container-max-width mx-auto gap-4 font-code-md">
+<div class="text-sm font-bold neon-text">
+                SYS_SENTINEL_AUTH
+            </div>
+<div class="text-xs text-white/50 tracking-widest uppercase">
+                © 2024 Sentinel Security Systems. All rights reserved.
+            </div>
+<div class="flex gap-stack-md text-xs text-neon-cyan/70">
+<a class="hover:text-neon-cyan hover:shadow-[0_0_5px_rgba(0,242,255,0.5)] transition-all" href="#">POLICIES.TXT</a>
+<a class="hover:text-neon-cyan hover:shadow-[0_0_5px_rgba(0,242,255,0.5)] transition-all" href="#">STANDARDS.CFG</a>
+<a class="hover:text-neon-cyan hover:shadow-[0_0_5px_rgba(0,242,255,0.5)] transition-all" href="#">DOCS.MD</a>
+</div>
+</div>
+</footer>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordInput = document.getElementById('password-input');
+            const toggleVisibilityBtn = document.getElementById('toggleVisibility');
+            const visibilityIcon = document.getElementById('visibility-icon');
+            
+            const reqElements = {
+                length: document.getElementById('req-length'),
+                uppercase: document.getElementById('req-uppercase'),
+                lowercase: document.getElementById('req-lowercase'),
+                number: document.getElementById('req-number'),
+                special: document.getElementById('req-special')
+            };
+
+            const segments = [
+                document.getElementById('seg-1'),
+                document.getElementById('seg-2'),
+                document.getElementById('seg-3'),
+                document.getElementById('seg-4'),
+                document.getElementById('seg-5')
+            ];
+
+            const strengthLabel = document.getElementById('strength-label');
+            const feedbackAlert = document.getElementById('feedback-alert');
+            const feedbackList = document.getElementById('feedback-list');
+            const feedbackIcon = document.getElementById('feedback-icon');
+
+            // Toggle Password Visibility
+            document.getElementById('toggle-visibility').addEventListener('click', (e) => {
+                e.preventDefault();
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                visibilityIcon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+            });
+
+            passwordInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                evaluatePassword(val);
+            });
+
+            function evaluatePassword(password) {
+                const criteria = {
+                    length: password.length >= 8,
+                    uppercase: /[A-Z]/.test(password),
+                    lowercase: /[a-z]/.test(password),
+                    number: /[0-9]/.test(password),
+                    special: /[^A-Za-z0-9]/.test(password) // Simplified special char check, handles unicode implicitly
+                };
+
+                let score = 0;
+                let missingFeedback = [];
+
+                // Update Checklist UI
+                updateChecklistItem(reqElements.length, criteria.length);
+                if(criteria.length) score++; else missingFeedback.push("> ERR_LEN: Increase length to at least 8 characters.");
+
+                updateChecklistItem(reqElements.uppercase, criteria.uppercase);
+                if(criteria.uppercase) score++; else missingFeedback.push("> ERR_UPPER: Include an uppercase letter.");
+
+                updateChecklistItem(reqElements.lowercase, criteria.lowercase);
+                if(criteria.lowercase) score++; else missingFeedback.push("> ERR_LOWER: Include a lowercase letter.");
+
+                updateChecklistItem(reqElements.number, criteria.number);
+                if(criteria.number) score++; else missingFeedback.push("> ERR_NUM: Add a numeric digit.");
+
+                updateChecklistItem(reqElements.special, criteria.special);
+                if(criteria.special) score++; else missingFeedback.push("> ERR_SYM: Add a special character or symbol.");
+
+                if (password.length === 0) {
+                    score = 0;
+                    missingFeedback = [];
+                }
+
+                updateGauge(score, password.length === 0);
+                updateFeedback(missingFeedback, password.length === 0);
+            }
+
+            function updateChecklistItem(element, isMet) {
+                const icon = element.querySelector('.icon-check');
+                const text = element.querySelector('span:last-child');
+                
+                if (isMet) {
+                    icon.textContent = 'check_circle';
+                    icon.className = 'material-symbols-outlined text-neon-cyan icon-check drop-shadow-[0_0_5px_rgba(0,242,255,0.8)]';
+                    icon.setAttribute('data-weight', 'fill');
+                    icon.style.fontVariationSettings = "'FILL' 1";
+                    
+                    element.className = 'flex items-center gap-3 p-3 rounded bg-neon-cyan/10 border border-neon-cyan/50 transition-all duration-300 shadow-[inset_0_0_10px_rgba(0,242,255,0.2)]';
+                    text.className = 'text-sm text-neon-cyan font-bold';
+                } else {
+                    icon.textContent = 'radio_button_unchecked';
+                    icon.className = 'material-symbols-outlined text-white/30 icon-check';
+                    icon.removeAttribute('data-weight');
+                    icon.style.fontVariationSettings = "'FILL' 0";
+                    
+                    element.className = 'flex items-center gap-3 p-3 rounded bg-black/40 border border-neon-cyan/10 transition-all duration-300';
+                    text.className = 'text-sm text-white/50';
+                }
+            }
+
+            function updateGauge(score, isEmpty) {
+                // Reset segments
+                segments.forEach(seg => {
+                    seg.className = 'flex-1 progress-segment bg-white/10 rounded-sm';
+                });
+
+                if (isEmpty) {
+                    strengthLabel.textContent = 'NULL';
+                    strengthLabel.className = 'text-lg font-bold text-white/50';
+                    return;
+                }
+
+                let colorClass = 'bg-danger shadow-[0_0_10px_rgba(248,113,113,0.8)]';
+                let label = 'COMPROMISED';
+                let labelColor = 'text-danger drop-shadow-[0_0_5px_rgba(248,113,113,0.8)]';
+
+                if (score >= 3 && score < 5) {
+                    colorClass = 'bg-warning shadow-[0_0_10px_rgba(251,191,36,0.8)]';
+                    label = 'ACCEPTABLE';
+                    labelColor = 'text-warning drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]';
+                } else if (score === 5) {
+                    colorClass = 'bg-neon-cyan shadow-[0_0_15px_rgba(0,242,255,1)]';
+                    label = 'OPTIMAL_SECURE';
+                    labelColor = 'text-neon-cyan drop-shadow-[0_0_8px_rgba(0,242,255,0.8)]';
+                }
+
+                for (let i = 0; i < score; i++) {
+                    segments[i].className = `flex-1 progress-segment rounded-sm ${colorClass}`;
+                }
+
+                strengthLabel.textContent = label;
+                strengthLabel.className = `text-lg font-bold ${labelColor}`;
+            }
+
+            function updateFeedback(missing, isEmpty) {
+                if (isEmpty || missing.length === 0) {
+                    feedbackAlert.classList.add('hidden');
+                    return;
+                }
+
+                feedbackAlert.classList.remove('hidden');
+                
+                // Color alert based on severity
+                if(missing.length > 3) {
+                     feedbackAlert.className = 'glass-panel rounded-xl p-stack-md border-l-4 border-danger mt-stack-md';
+                     feedbackIcon.className = 'material-symbols-outlined text-danger mt-1 animate-pulse drop-shadow-[0_0_5px_rgba(248,113,113,0.8)]';
+                     feedbackIcon.textContent = 'warning';
+                     feedbackAlert.querySelector('h4').className = 'font-code-md text-body-lg font-bold text-danger mb-1 uppercase tracking-wider drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]';
+                     feedbackAlert.querySelector('h4').textContent = 'SYS_CRITICAL_WARNING';
+                } else {
+                     feedbackAlert.className = 'glass-panel rounded-xl p-stack-md border-l-4 border-warning mt-stack-md';
+                     feedbackIcon.className = 'material-symbols-outlined text-warning mt-1 drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]';
+                     feedbackIcon.textContent = 'lightbulb';
+                     feedbackAlert.querySelector('h4').className = 'font-code-md text-body-lg font-bold text-warning mb-1 uppercase tracking-wider drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]';
+                     feedbackAlert.querySelector('h4').textContent = 'SYS_SUGGESTION';
+                }
+
+                feedbackList.innerHTML = missing.map(m => `<li class="opacity-80">${m}</li>`).join('');
+            }
+        });
+    </script>
+</body></html>
