@@ -1,0 +1,13 @@
+{
+  "name": "password-strength-analyzer",
+  "version": "1.0.0",
+  "description": "Cryptographic Password Strength Analyzer",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
